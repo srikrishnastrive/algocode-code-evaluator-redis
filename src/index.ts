@@ -2,12 +2,15 @@ import bodyParser from "body-parser";
 import express, { Express } from "express";
 
 import serverConfig from "./config/serverConfig";
-import runCpp from "./containers/runCpp";
+//import runCpp from "./containers/runCpp";
 //import runJava from "./containers/runJavaDocker";
 //import runPython from "./containers/runPythonDocker";
 import serverAdapter from "./dashboard/bullmq.dashboard";
+import submissionQueueProducer from "./producers/submissionQueueProducer";
 import apiRouter from "./routes";
+import { submission_queue } from "./utils/constants";
 import SampleWorker from "./workers/sampleWorker";
+import SubmissionWorker from "./workers/submissionWorker";
 
 const app: Express = express();
 
@@ -20,9 +23,10 @@ app.use("/admin", serverAdapter.getRouter());
 
 app.listen(serverConfig.PORT, () => {
   console.log(`Server started at *:${serverConfig.PORT}`);
-
+  console.log(`BullBoard dashboard running on: http://localhost:${serverConfig.PORT}/admin`);
   SampleWorker('SampleQueue');
-  console.log(`BullBoard dashboard running on: http://localhost:${serverConfig.PORT}/ui`);
+  SubmissionWorker(submission_queue);
+  
 
   //const pythonCode = `x = input(); y = input(); print("value of x is", x); print("value of y is", y);`;
   // const javaCode = `
@@ -66,7 +70,7 @@ app.listen(serverConfig.PORT, () => {
     };
   `;
 
-  const cppCode = `
+  const code = `
   #include<iostream>
   #include<vector>
   #include<stdio.h>
@@ -88,8 +92,14 @@ app.listen(serverConfig.PORT, () => {
 
 const inputCase = `10
 `;
-  // runPython(pythonCode, inputCase);
-  //runJava(javaCode,inputCase);
-  runCpp(cppCode,inputCase);
+submissionQueueProducer({"1234": {
+  language: "CPP",
+  inputCase,
+  code
+}});
+
+//   // runPython(pythonCode, inputCase);
+//   //runJava(javaCode,inputCase);
+//   runCpp(cppCode,inputCase);
   
 });

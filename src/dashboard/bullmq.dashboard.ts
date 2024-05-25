@@ -1,24 +1,17 @@
 import { createBullBoard } from "@bull-board/api";
-import { BullMQAdapter } from "@bull-board/api/bullMQAdapter.js";
+import {BullMQAdapter} from "@bull-board/api/bullMQAdapter";
 import { ExpressAdapter } from "@bull-board/express";
-import { Queue, RedisOptions } from "bullmq"; 
 
+import sampleQueue from "../queues/sampleQueue";
+import submissionQueue from "../queues/submissionQueue";
 
-const redisOptions: RedisOptions = {
-  host: 'localhost',
-  port: 6379,
-};
-
-const backupQueue = new Queue("SampleQueue", { connection: redisOptions }); // Pass redisOptions instead of RedisConnection
 
 const serverAdapter = new ExpressAdapter();
+serverAdapter.setBasePath('/admin');
+
 createBullBoard({
-  queues: [new BullMQAdapter(backupQueue)],
-  serverAdapter: serverAdapter,
+    queues: [new BullMQAdapter(sampleQueue), new BullMQAdapter(submissionQueue)],
+    serverAdapter,
 });
 
-serverAdapter.setBasePath("/admin");
-
 export default serverAdapter;
-
-
