@@ -6,7 +6,6 @@ import serverConfig from "./config/serverConfig";
 //import runJava from "./containers/runJavaDocker";
 //import runPython from "./containers/runPythonDocker";
 import serverAdapter from "./dashboard/bullmq.dashboard";
-import sampleQueueproducer from "./producers/sampleQueueproducer";
 import submissionQueueProducer from "./producers/submissionQueueProducer";
 import apiRouter from "./routes";
 import { submission_queue } from "./utils/constants";
@@ -93,7 +92,7 @@ app.listen(serverConfig.PORT, () => {
 
 const inputCase = `10
 `;
-sampleQueueproducer("sampleQueue",{langugae:"python"},1);
+// sampleQueueproducer("sampleQueue",{langugae:"python"},1);
 submissionQueueProducer({"1234": {
   language: "CPP",
   inputCase,

@@ -44,10 +44,10 @@ class CppExecutor implements CodeExecutorStrategy{
     
         try{
             const codeResponse:string = await this.fetchDecodedStream(loggerStream,rawLogBuffer);
-                return {output:codeResponse,status:"COMPLETED"}
+                return {output:codeResponse,status:"COMPLETED"};
         }
         catch(error){
-            return {output: error as string, status:"ERROR"}
+            return {output: error as string, status:"ERROR"};
         }
         finally{
             await cppDockerContainer.remove();
