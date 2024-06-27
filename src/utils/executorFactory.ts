@@ -4,13 +4,13 @@ import CppExecutor from "../containers/runCpp";
 import CodeExecutorStrategy from "../types/codeExecutorStatergy";
 
 export default function createExecutor(codeLanguage:string):CodeExecutorStrategy | null{
-    if (codeLanguage === "PYTHON"){
+    if (codeLanguage.toLowerCase() == "python"){
         return new PythonExecutor();
     }
-    else if (codeLanguage === "JAVA"){
+    else if (codeLanguage.toLowerCase() == "java"){
         return new JavaExecutor();
     }
-    else if (codeLanguage === "CPP"){
+    else if (codeLanguage.toLowerCase() == "cpp"){
         return new CppExecutor();
     }
     else {

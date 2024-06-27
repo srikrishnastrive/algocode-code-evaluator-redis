@@ -9,9 +9,9 @@ import decodeDockerStream from './dockerHelper';
 import pullImage from './pullImage';
 
 class PythonExecutor implements CodeExecutorStrategy {
-     async execute(code: string, inputTestCase: string): Promise<ExecutionResponse> {
+     async execute(code: string, inputTestCase: string,outputTestCase: string): Promise<ExecutionResponse> {
         const rawLogBuffer: Buffer[] = [];
-
+        console.log(code,inputTestCase,outputTestCase);
         console.log("Initialising a new python docker container");
         pullImage(PYTHON_IMAGE);
         const runCommand = `echo '${code.replace(/'/g, `'\\"`)}' > test.py && echo '${inputTestCase.replace(/'/g, `'\\"`)}' | python3 test.py`;

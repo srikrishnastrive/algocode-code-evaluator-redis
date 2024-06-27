@@ -6,7 +6,7 @@ import serverConfig from "./config/serverConfig";
 //import runJava from "./containers/runJavaDocker";
 //import runPython from "./containers/runPythonDocker";
 import serverAdapter from "./dashboard/bullmq.dashboard";
-import submissionQueueProducer from "./producers/submissionQueueProducer";
+//import submissionQueueProducer from "./producers/submissionQueueProducer";
 import apiRouter from "./routes";
 import { submission_queue } from "./utils/constants";
 import SampleWorker from "./workers/sampleWorker";
@@ -21,8 +21,8 @@ app.use(bodyParser.text());
 app.use('/api', apiRouter);
 app.use("/admin", serverAdapter.getRouter());
 
-app.listen(serverConfig.PORT, () => {
-  console.log(`Server started at *:${serverConfig.PORT}`);
+app.listen(3001, () => {
+  console.log(`Server started at *:${3001}`);
   console.log(`BullBoard dashboard running on: http://localhost:${serverConfig.PORT}/admin`);
   SampleWorker('SampleQueue');
   SubmissionWorker(submission_queue);
@@ -58,46 +58,48 @@ app.listen(serverConfig.PORT, () => {
   // }
   // `;
   // const inputCase = `10`;
-  const userCode = `
+//   const userCode = `
   
-    class Solution {
-      public:
-      vector<int> permute() {
-          vector<int> v;
-          v.push_back(10);
-          return v;
-      }
-    };
-  `;
+//     class Solution {
+//       public:
+//       vector<int> permute() {
+//           vector<int> v;
+//           v.push_back(10);
+//           return v;
+//       }
+//     };
+//   `;
 
-  const code = `
-  #include<iostream>
-  #include<vector>
-  #include<stdio.h>
-  using namespace std;
+//   const code = `
+//   #include<iostream>
+//   #include<vector>
+//   #include<stdio.h>
+//   using namespace std;
   
-  ${userCode}
+//   ${userCode}
 
-  int main() {
+//   int main() {
 
-    Solution s;
-    vector<int> result = s.permute();
-    for(int x : result) {
-      cout<<x<<" ";
-    }
-    cout<<endl;
-    return 0;
-  }
-  `;
+//     Solution s;
+//     vector<int> result = s.permute();
+//     for(int x : result) {
+//       cout<<x<<" ";
+//     }
+//     cout<<endl;
+//     return 0;
+//   }
+//   `;
 
-const inputCase = `10
-`;
-// sampleQueueproducer("sampleQueue",{langugae:"python"},1);
-submissionQueueProducer({"1234": {
-  language: "CPP",
-  inputCase,
-  code
-}});
+// const inputCase = `10
+// `;
+
+// // sampleQueueproducer("sampleQueue",{langugae:"python"},1);
+// submissionQueueProducer({"1234": {
+//   language: "CPP",
+//   code,
+//   inputCase,
+  
+// }});
 
 //   // runPython(pythonCode, inputCase);
 //   //runJava(javaCode,inputCase);
