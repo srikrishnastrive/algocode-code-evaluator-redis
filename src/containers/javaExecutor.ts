@@ -1,6 +1,7 @@
 // import Docker from 'dockerode';
 
 // import { TestCases } from '../types/testCases';
+
 import CodeExecutorStrategy, { ExecutionResponse } from '../types/codeExecutorStatergy';
 import { JAVA_IMAGE } from '../utils/constants';
 import createContainer from './containerFactory';
@@ -44,9 +45,17 @@ class JavaExecutor implements CodeExecutorStrategy{
     
     try{
         const codeResponse:string = await this.fetchDecodedStream(loggerStream,rawLogBuffer);
-            return {output:codeResponse,status:"COMPLETED"};
+        if(codeResponse.trim() === outputTestCase.trim()) {
+            return {output: codeResponse, status: "SUCCESS"};
+        } else {
+            return {output: codeResponse, status: "WA"};
+        }
+       
     }
     catch(error){
+        if(error === "TLE"){
+            await javaDockerContainer.kill();
+        }
         return {output: error as string, status:"ERROR"};
     }
     finally{
@@ -59,9 +68,15 @@ class JavaExecutor implements CodeExecutorStrategy{
     }
 
     fetchDecodedStream(loggerStream: NodeJS.ReadableStream,rawLogBuffer:Buffer[]):Promise<string>{
+       
         return new Promise((res,rej) => {
+            const timeOut = setTimeout(()=>{
+                console.log("Time out called");
+                rej("TLE")
+            },2000);
             loggerStream.on('end', () => {
                 console.log(rawLogBuffer);
+                clearTimeout(timeOut);
                 const completeBuffer = Buffer.concat(rawLogBuffer);
                 const decodedStream = decodeDockerStream(completeBuffer);
                 console.log(decodedStream);
